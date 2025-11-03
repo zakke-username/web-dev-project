@@ -26,23 +26,26 @@ export const getItemById = async (req, res) => {
 
 export const addItem = async (req, res) => {
   try {
-    const { course, description = null, price } = req.body;
+    const { course, description = null, price, diets = null } = req.body;
 
     if (!course || price == null) {
       return res.status(400).json({ message: 'Missing required information' });
     }
 
-    const result = await Menu.addItem({ course, description, price });
+    const result = await Menu.addItem({
+      course,
+      description,
+      price,
+      diets,
+    });
+
     if (result) {
-      return res.status(200).json({
-        message: 'Added new menu item',
-        item: { course, description, price },
-      });
+      return res.status(201).json({ message: 'Added new menu item' });
     } else {
       return res.status(500).json({ message: 'Failed to add item' });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res
       .status(500)
       .json({ message: 'Server error while adding menu item' });

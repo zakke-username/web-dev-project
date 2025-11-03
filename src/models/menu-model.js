@@ -11,12 +11,12 @@ export const getItemById = async (id) => {
 };
 
 export const addItem = async (item) => {
-  const { course, description = null, price } = item;
+  const { course, description = null, diets = null, price } = item;
   const rows = await pool.execute(
-    'INSERT INTO menu (course, description, price) VALUES (?, ?, ?)',
-    [course, description, price]
+    'INSERT INTO menu (course, description, diets, price) VALUES (?, ?, ?, ?)',
+    [course, description, diets, price]
   );
-  if (rows[0].affectedRows === 0) {
+  if (rows.affectedRows === 0) {
     return false;
   }
   return true;
