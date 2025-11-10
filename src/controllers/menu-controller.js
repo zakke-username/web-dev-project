@@ -26,17 +26,17 @@ export const getItemById = async (req, res) => {
 
 export const addItem = async (req, res) => {
   try {
-    const { course, description = null, price, diets = null } = req.body;
+    const { name, description = null, category = null, price } = req.body;
 
-    if (!course || price == null) {
+    if (!name || price == null) {
       return res.status(400).json({ message: 'Missing required information' });
     }
 
     const result = await Menu.addItem({
-      course,
+      name,
       description,
+      category,
       price,
-      diets,
     });
 
     if (result) {
