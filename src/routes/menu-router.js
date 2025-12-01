@@ -1,4 +1,5 @@
 import express from 'express';
+import { authenticateToken } from '../middlewares/auth.js';
 import {
   getMenu,
   getItemById,
@@ -8,7 +9,7 @@ import {
 
 const menuRouter = express.Router();
 
-menuRouter.route('/').get(getMenu).post(addItem);
-menuRouter.route('/:id').get(getItemById).delete(deleteItem);
+menuRouter.route('/').get(getMenu).post(authenticateToken, addItem);
+menuRouter.route('/:id').get(getItemById).delete(authenticateToken, deleteItem);
 
 export default menuRouter;

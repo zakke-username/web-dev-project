@@ -6,9 +6,26 @@ export const authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
     if (error) return res.sendStatus(403);
-    req.user = user;
+    req.user = decoded;
     next();
+  });
+};
+
+export const authenticateTokenOptional = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+  jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+    if (error) {
+      req.user = null;
+    } else {
+      req.user = decoded;
+    }
+    return next();
   });
 };

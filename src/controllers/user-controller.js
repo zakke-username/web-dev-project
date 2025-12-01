@@ -37,7 +37,6 @@ export const postUser = async (req, res, next) => {
       .status(201)
       .json({ message: 'Successfully created user', id: result.id });
   } catch (error) {
-    // todo: duplicate entry message
     console.error(error);
     next(error);
   }

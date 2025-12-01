@@ -1,5 +1,6 @@
 import pool from '../utils/database.js';
 
+// TODO: return info conditionally: if not auth, only basic public info
 export const getUserById = async (id) => {
   const [rows] = await pool.execute('SELECT * FROM users WHERE user_id = ?', [
     id,

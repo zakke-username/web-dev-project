@@ -14,15 +14,33 @@ export const getItemById = async (id) => {
 };
 
 export const addItem = async (item) => {
-  const { name, description = null, category = null, price } = item;
-  const rows = await pool.execute(
-    'INSERT INTO menu (name, description, category, price) VALUES (?, ?, ?, ?)',
-    [name, description, category, price]
+  const {
+    name,
+    isGlutenFree,
+    isLactoseFree,
+    isVegan,
+    category,
+    price,
+    description = null,
+    picture_filename = null,
+  } = item;
+  const [result] = await pool.execute(
+    'INSERT INTO menu (name, gluten_free, lactose_free, vegan, category, price, description, picture_filename) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      name,
+      isGlutenFree,
+      isLactoseFree,
+      isVegan,
+      category,
+      price,
+      description,
+      picture_filename,
+    ]
   );
-  if (rows.affectedRows === 0) {
+  if (result.affectedRows === 0) {
     return false;
   }
-  return true;
+  return { ok: true, id: result.insertId };
 };
 
 export const deleteItem = async (id) => {
