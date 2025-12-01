@@ -24,6 +24,7 @@ export const addItem = async (item) => {
     description = null,
     picture_filename = null,
   } = item;
+
   const [result] = await pool.execute(
     'INSERT INTO menu (name, gluten_free, lactose_free, vegan, category, price, description, picture_filename) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     [
@@ -37,18 +38,15 @@ export const addItem = async (item) => {
       picture_filename,
     ]
   );
-  if (result.affectedRows === 0) {
-    return false;
-  }
-  return { ok: true, id: result.insertId };
+
+  if (result.affectedRows === 0) return false;
+  return { id: result.insertId };
 };
 
 export const deleteItem = async (id) => {
   const [rows] = await pool.execute('DELETE FROM menu WHERE menu_item_id = ?', [
     id,
   ]);
-  if (rows.affectedRows === 0) {
-    return false;
-  }
+  if (rows.affectedRows === 0) return false;
   return true;
 };

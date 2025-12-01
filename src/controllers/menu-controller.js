@@ -26,6 +26,11 @@ export const getItemById = async (req, res) => {
 
 export const addItem = async (req, res, next) => {
   try {
+    // auth
+    if (!req.user) return res.sendStatus(401);
+    if (req.user.role !== 'admin') return res.sendStatus(403);
+
+    // destructure variables from request
     const {
       name,
       gluten_free = null,
@@ -37,17 +42,19 @@ export const addItem = async (req, res, next) => {
       picture_filename = null,
     } = req.body;
 
+    // check for missing or invalid values
     if (!name || !category || price == null) {
       return res.status(400).json({ message: 'Missing required information' });
     }
-
     if (isNaN(parseFloat(price)))
       return res.status(400).json({ message: 'Invalid price' });
 
+    // checkboxes -> boolean
     const isGlutenFree = gluten_free ? 1 : 0;
     const isLactoseFree = lactose_free ? 1 : 0;
     const isVegan = vegan ? 1 : 0;
 
+    // call model / insert to db
     const result = await Menu.addItem({
       name,
       isGlutenFree,
@@ -59,12 +66,10 @@ export const addItem = async (req, res, next) => {
       picture_filename,
     });
 
-    if (!result) {
-      const error = new Error('Database error: failed to add item');
-      error.status = 500;
-      return next(error);
-    }
+    // handle db error
+    if (!result) return next(new Error('Database error, failed to add item'));
 
+    // success
     return res
       .status(201)
       .json({ message: 'Added new menu item', id: result.id });
@@ -74,16 +79,20 @@ export const addItem = async (req, res, next) => {
   }
 };
 
-export const deleteItem = async (req, res) => {
+export const deleteItem = async (req, res, next) => {
   try {
+    if (!req.user) return res.sendStatus(401);
+    if (req.user.role !== 'admin') return res.sendStatus(403);
+
     const result = await Menu.deleteItem(req.params.id);
-    if (result) {
-      return res.status(200).json({ message: 'Deleted item from menu' });
-    } else {
-      return res.status(404).json({ message: 'Item was not found' });
+    if (!result) {
+      const error = new Error('Item not found');
+      error.status = 404;
+      return next(error);
     }
+    return res.status(200).json({ message: 'Deleted item from menu' });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error while deleting item' });
+    return next(error);
   }
 };
