@@ -1,8 +1,15 @@
 import express from 'express';
 import { body } from 'express-validator';
-// import { authenticateToken } from '../middlewares/auth.js';
+import {
+  authenticateToken,
+  authenticateTokenOptional,
+} from '../middlewares/auth.js';
 import { validationErrors } from '../middlewares/validation.js';
-import { getUserById, postUser } from '../controllers/user-controller.js';
+import {
+  getUserById,
+  postUser,
+  deleteUser,
+} from '../controllers/user-controller.js';
 
 const userRouter = express.Router();
 
@@ -15,6 +22,8 @@ userRouter
     validationErrors,
     postUser
   );
-userRouter.route('/:id').get(getUserById);
-
+userRouter
+  .route('/:id')
+  .get(authenticateTokenOptional, getUserById)
+  .delete(authenticateToken, deleteUser);
 export default userRouter;

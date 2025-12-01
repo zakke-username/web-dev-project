@@ -26,3 +26,11 @@ export const postUser = async (user) => {
   if (result.affectedRows === 0) return false;
   return { id: result.insertId };
 };
+
+export const deleteUser = async (id) => {
+  const [result] = await pool.execute('DELETE FROM users WHERE user_id = ?', [
+    id,
+  ]);
+  if (result.affectedRows === 0) return false;
+  return true;
+};
