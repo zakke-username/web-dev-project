@@ -52,3 +52,7 @@ export const getReplyById = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const postReview = async (req, res, next) => {
+  return res.status(500).json({ message: 'TODO: auth' });
+};
