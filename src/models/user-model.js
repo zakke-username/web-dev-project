@@ -8,6 +8,14 @@ export const getUserById = async (id) => {
   return rows[0];
 };
 
+export const getUserByUsername = async (username) => {
+  const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [
+    username,
+  ]);
+  if (!rows.length) return false;
+  return rows[0];
+};
+
 export const postUser = async (user) => {
   const { username, passwordHash, email, address, phone = null } = user;
   const [result] = await pool.execute(
