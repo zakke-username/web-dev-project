@@ -20,7 +20,7 @@ reviewRouter
     validationErrors,
     postReview
   );
-reviewRouter.route('/reply/all/:id').get(getRepliesByReviewId);
+reviewRouter.route('/:id/reply').get(getRepliesByReviewId);
 reviewRouter.route('/reply/:id').get(getReplyById);
 reviewRouter.route('/:id').get(getReviewById);
 

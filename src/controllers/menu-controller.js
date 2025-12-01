@@ -1,26 +1,27 @@
 import * as Menu from '../models/menu-model.js';
 
-export const getMenu = async (req, res) => {
+export const getMenu = async (req, res, next) => {
   try {
     const menu = await Menu.getMenu();
     return res.status(200).json(menu);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Failed to retrieve menu' });
+    return next(error);
   }
 };
 
-export const getItemById = async (req, res) => {
+export const getItemById = async (req, res, next) => {
   try {
     const item = await Menu.getItemById(req.params.id);
-    if (item) {
-      return res.status(200).json(item);
-    } else {
-      return res.status(404).json({ message: 'Did not find item' });
+    if (!item) {
+      const error = new Error('Menu item not found');
+      error.status = 404;
+      return next(error);
     }
+    return res.status(200).json(item);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error' });
+    return next(error);
   }
 };
 

@@ -42,7 +42,7 @@ export const getReplyById = async (req, res, next) => {
     const id = parseInt(req.params.id);
     const reply = await Reviews.getReplyById(id);
     if (!reply) {
-      const error = new Error('Could not find reply');
+      const error = new Error('Reply not found');
       error.status = 404;
       return next(error);
     }
@@ -53,6 +53,6 @@ export const getReplyById = async (req, res, next) => {
   }
 };
 
-export const postReview = async (req, res, next) => {
-  return res.status(500).json({ message: 'TODO: auth' });
+export const postReview = async (req, res) => {
+  return res.status(500).json({ message: 'TODO' });
 };

@@ -51,7 +51,7 @@ export const postUser = async (req, res, next) => {
       phone,
     });
     if (!result) {
-      const error = new Error('Database error: could not add user');
+      const error = new Error('Error: could not add user');
       return next(error);
     }
     res
