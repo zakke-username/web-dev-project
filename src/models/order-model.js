@@ -22,3 +22,21 @@ export const fetchOrderItemsByOrderId = async (orderId) => {
     [orderId]);
   return orderItems;
 }
+
+export const insertOrder = async (orderData) => {
+  const {user_id, food_modification, delivery_instruction, total_price} = orderData;
+  const [result] = await pool.execute(
+    'INSERT INTO orders (user_id, food_modification, delivery_instruction, total_price) VALUES (?, ?, ?, ?)',
+    [user_id, food_modification, delivery_instruction, total_price]
+  );
+  if (result.affectedRows === 0) return false;
+  return { id: result.insertId };
+}
+
+export const insertOrderItems = async (orderId, items) => {
+  const promises = items.map(item => pool.execute(
+    'INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)',
+    [orderId, item.menu_item_id, item.quantity]
+  ));
+  await Promise.all(promises);
+}

@@ -1,4 +1,5 @@
-import {fetchAllOrders, fetchOrdersById, fetchOrderItemsByOrderId} from '../models/order-model.js';
+import {fetchAllOrders, fetchOrdersById, fetchOrderItemsByOrderId, insertOrder, insertOrderItems} from '../models/order-model.js';
+import pool from '../utils/database.js';
 
 export const getAllOrders = async (req, res) => {
   try {
@@ -24,5 +25,44 @@ export const getOrderById = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
+  }
+}
+
+export const postOrder = async (req, res) => {
+  try {
+    const {
+      user_id,
+      food_modification = null,
+      delivery_instruction = null,
+      items
+    } = req.body;
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Item not found' });
+    }
+
+    let totalPrice = 0;
+    for (const item of items) {
+      const [menu] = await pool.execute('SELECT price FROM menu WHERE menu_item_id = ?', [item.menu_item_id]);
+      if (menu.length === 0) return res.status(400).json({ error: `Menu item ${item.menu_item_id} not found` });
+      totalPrice += menu[0].price * item.quantity;
+    }
+
+    const orderData = {
+      user_id,
+      food_modification,
+      delivery_instruction,
+      total_price: totalPrice
+    };
+
+    const insertedOrder = await insertOrder(orderData);
+    const orderId = insertedOrder.id;
+
+    await insertOrderItems(orderId, items);
+
+    res.status(200).json({ message: 'Order created', orderId: orderId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
 }
