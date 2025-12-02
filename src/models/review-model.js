@@ -48,7 +48,7 @@ export const postReview = async ({
 
 export const postReply = async ({ userId, reviewId, text }) => {
   const [result] = await pool.execute(
-    'INSERT INTO review_replies (user_id, review_id, text) VALUES (?, ?, ?',
+    'INSERT INTO review_replies (user_id, review_id, text) VALUES (?, ?, ?)',
     [userId, reviewId, text]
   );
   if (result.affectedRows === 0) return false;
