@@ -8,6 +8,7 @@ import {
   getRepliesByReviewId,
   getReplyById,
   postReview,
+  postReply,
 } from '../controllers/review-controller.js';
 
 const reviewRouter = express.Router();
@@ -22,7 +23,14 @@ reviewRouter
     authenticateToken,
     postReview
   );
-reviewRouter.route('/:id/reply').get(getRepliesByReviewId);
+reviewRouter
+  .route('/:id/reply')
+  .get(getRepliesByReviewId)
+  .post(
+    body('text').trim().isLength({ max: 10000 }),
+    authenticateToken,
+    postReply
+  );
 reviewRouter.route('/reply/:id').get(getReplyById);
 reviewRouter.route('/:id').get(getReviewById);
 

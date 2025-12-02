@@ -57,22 +57,16 @@ export const postReview = async (req, res, next) => {
   try {
     if (!req.user) return res.sendStatus(401);
 
-    const {
-      user_id,
-      title,
-      rating,
-      text = null,
-      picture_filename = null,
-    } = req.body;
+    const { title, rating, text = null, picture_filename = null } = req.body;
 
-    if (!user_id || !title || rating == null) {
+    if (!title || rating == null) {
       const error = new Error('Missing required information');
       error.status = 400;
       return next(error);
     }
 
     const result = await Reviews.postReview({
-      user_id,
+      user_id: req.user.id,
       title,
       rating,
       text,
@@ -85,5 +79,38 @@ export const postReview = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next(error);
+  }
+};
+
+export const postReply = async (req, res, next) => {
+  try {
+    if (!req.user) return res.sendStatus(401);
+
+    const review = await Reviews.getReviewById(req.params.id);
+    if (!review) {
+      const error = new Error('Review does not exist');
+      error.status = 404;
+      return next(error);
+    }
+
+    const { text } = req.body;
+    if (!text.trim()) {
+      const error = new Error('Missing text');
+      error.status = 400;
+      return next(error);
+    }
+
+    const result = await Reviews.postReply({
+      userId: req.user.id,
+      reviewId: review.review_id,
+      text: text.trim(),
+    });
+
+    if (!result) return next(new Error('Could not post review'));
+
+    return res.status(201).json({ message: 'Reply posted successfully' });
+  } catch (error) {
+    console.error(error);
+    return next(error);
   }
 };
