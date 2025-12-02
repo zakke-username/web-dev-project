@@ -5,7 +5,7 @@ import {
   insertOrder,
   insertOrderItems,
 } from '../models/order-model.js';
-import pool from '../utils/database.js';
+import {getItemById} from '../models/menu-model.js';
 
 export const getAllOrders = async (req, res, next) => {
   try {
@@ -52,15 +52,12 @@ export const postOrder = async (req, res, next) => {
 
     let totalPrice = 0;
     for (const item of items) {
-      const [menu] = await pool.execute(
-        'SELECT price FROM menu WHERE menu_item_id = ?',
-        [item.menu_item_id]
-      );
-      if (menu.length === 0)
+      const menuItem = await getItemById(item.menu_item_id);
+      if (menuItem.length === 0)
         return res
           .status(400)
           .json({ error: `Menu item ${item.menu_item_id} not found` });
-      totalPrice += menu[0].price * item.quantity;
+      totalPrice += menuItem.price * item.quantity;
     }
 
     const orderData = {
