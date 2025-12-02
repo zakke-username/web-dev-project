@@ -53,6 +53,37 @@ export const getReplyById = async (req, res, next) => {
   }
 };
 
-export const postReview = async (req, res) => {
-  return res.status(500).json({ message: 'TODO' });
+export const postReview = async (req, res, next) => {
+  try {
+    if (!req.user) return res.sendStatus(401);
+
+    const {
+      user_id,
+      title,
+      rating,
+      text = null,
+      picture_filename = null,
+    } = req.body;
+
+    if (!user_id || !title || rating == null) {
+      const error = new Error('Missing required information');
+      error.status = 400;
+      return next(error);
+    }
+
+    const result = await Reviews.postReview({
+      user_id,
+      title,
+      rating,
+      text,
+      picture_filename,
+    });
+
+    if (!result) return next(new Error('Error: could not post review'));
+
+    res.status(201).json({ message: 'Successfully posted review' });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 };

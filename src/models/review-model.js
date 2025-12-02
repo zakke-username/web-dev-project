@@ -30,3 +30,19 @@ export const getReplyById = async (id) => {
   if (!rows.length) return false;
   return rows[0];
 };
+
+export const postReview = async ({
+  user_id,
+  title,
+  text,
+  rating,
+  picture_filename,
+}) => {
+  // const { user_id, title, text, rating, picture_filename } = review;
+  const [result] = await pool.execute(
+    'INSERT INTO reviews (user_id, title, text, rating, picture_filename) VALUES (?, ?, ?, ?, ?)',
+    [user_id, title, text, rating, picture_filename]
+  );
+  if (result.affectedRows === 0) return false;
+  return { id: result.insertId };
+};
