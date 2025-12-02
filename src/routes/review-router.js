@@ -8,6 +8,7 @@ import {
   getRepliesByReviewId,
   getReplyById,
   postReview,
+  deleteReview,
   postReply,
 } from '../controllers/review-controller.js';
 
@@ -32,6 +33,9 @@ reviewRouter
     postReply
   );
 reviewRouter.route('/reply/:id').get(getReplyById);
-reviewRouter.route('/:id').get(getReviewById);
+reviewRouter
+  .route('/:id')
+  .get(getReviewById)
+  .delete(authenticateToken, deleteReview);
 
 export default reviewRouter;

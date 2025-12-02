@@ -82,13 +82,34 @@ export const postReview = async (req, res, next) => {
   }
 };
 
+export const deleteReview = async (req, res, next) => {
+  try {
+    if (!req.user) return res.sendStatus(401);
+
+    const id = parseInt(req.params.id);
+    const review = await Reviews.getReviewById(id);
+    if (!review) return res.sendStatus(404);
+
+    if (req.user.id !== review.user_id && req.user.role !== 'admin')
+      return res.sendStatus(403);
+
+    const result = await Reviews.deleteReview(id);
+    if (!result) return res.sendStatus(500);
+
+    return res.status(200).json({ message: 'Succesfully deleted review' });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
 export const postReply = async (req, res, next) => {
   try {
     if (!req.user) return res.sendStatus(401);
 
     const review = await Reviews.getReviewById(req.params.id);
     if (!review) {
-      const error = new Error('Review does not exist');
+      const error = new Error('Review not found');
       error.status = 404;
       return next(error);
     }

@@ -46,6 +46,15 @@ export const postReview = async ({
   return { id: result.insertId };
 };
 
+export const deleteReview = async (id) => {
+  const [result] = await pool.execute(
+    'DELETE FROM reviews WHERE review_id = ?',
+    [id]
+  );
+  if (result.affectedRows === 0) return false;
+  return true;
+};
+
 export const postReply = async ({ userId, reviewId, text }) => {
   const [result] = await pool.execute(
     'INSERT INTO review_replies (user_id, review_id, text) VALUES (?, ?, ?)',
