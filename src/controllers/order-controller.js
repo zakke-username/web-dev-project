@@ -5,7 +5,7 @@ import {
   insertOrder,
   insertOrderItems,
 } from '../models/order-model.js';
-import {getItemById} from '../models/menu-model.js';
+import { getItemById } from '../models/menu-model.js';
 
 export const getAllOrders = async (req, res, next) => {
   try {
@@ -35,8 +35,6 @@ export const getOrderById = async (req, res, next) => {
   }
 };
 
-// todo: db query to model
-// middleware error handling
 export const postOrder = async (req, res, next) => {
   try {
     const {

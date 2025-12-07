@@ -12,5 +12,6 @@ router.use('/review', reviewRouter);
 router.use('/user', userRouter);
 router.use('/auth', authRouter);
 router.use('/order', orderRouter);
+router.use('/images', express.static('uploads'));
 
 export default router;

@@ -1,5 +1,6 @@
 import express from 'express';
 import { authenticateToken } from '../middlewares/auth.js';
+import { upload, createImage, createThumbnail } from '../middlewares/images.js';
 import {
   getMenu,
   getItemById,
@@ -9,7 +10,17 @@ import {
 
 const menuRouter = express.Router();
 
-menuRouter.route('/').get(getMenu).post(authenticateToken, addItem);
+// TODO: menu post input validation
+menuRouter
+  .route('/')
+  .get(getMenu)
+  .post(
+    upload.single('menu-item-image'),
+    createImage,
+    createThumbnail,
+    authenticateToken,
+    addItem
+  );
 menuRouter.route('/:id').get(getItemById).delete(authenticateToken, deleteItem);
 
 export default menuRouter;

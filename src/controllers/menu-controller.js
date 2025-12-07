@@ -40,13 +40,12 @@ export const addItem = async (req, res, next) => {
       category,
       price,
       description = null,
-      picture_filename = null,
     } = req.body;
 
     // check for missing or invalid values
-    if (!name || !category || price == null) {
+    if (!name || !category || price == null)
       return res.status(400).json({ message: 'Missing required information' });
-    }
+
     if (isNaN(parseFloat(price)))
       return res.status(400).json({ message: 'Invalid price' });
 
@@ -64,10 +63,8 @@ export const addItem = async (req, res, next) => {
       category,
       price,
       description,
-      picture_filename,
+      picture_filename: req.file.filename || null,
     });
-
-    // handle db error
     if (!result) return next(new Error('Database error, failed to add item'));
 
     // success
