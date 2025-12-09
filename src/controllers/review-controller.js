@@ -57,7 +57,7 @@ export const postReview = async (req, res, next) => {
   try {
     if (!req.user) return res.sendStatus(401);
 
-    const { title, rating, text = null, picture_filename = null } = req.body;
+    const { title, rating, text = null } = req.body;
 
     if (!title || rating == null) {
       const error = new Error('Missing required information');
@@ -70,7 +70,7 @@ export const postReview = async (req, res, next) => {
       title,
       rating,
       text,
-      picture_filename,
+      picture_filename: req.file.filename || null,
     });
 
     if (!result) return next(new Error('Error: could not post review'));
