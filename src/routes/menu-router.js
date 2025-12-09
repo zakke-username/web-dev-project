@@ -15,10 +15,10 @@ menuRouter
   .route('/')
   .get(getMenu)
   .post(
+    authenticateToken,
     upload.single('menu-item-image'),
     createImage,
     createThumbnail,
-    authenticateToken,
     addItem
   );
 menuRouter.route('/:id').get(getItemById).delete(authenticateToken, deleteItem);

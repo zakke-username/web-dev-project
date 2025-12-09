@@ -4,6 +4,7 @@ import {
   fetchOrderItemsByOrderId,
   insertOrder,
   insertOrderItems,
+  updateOrder,
 } from '../models/order-model.js';
 import { getItemById } from '../models/menu-model.js';
 
@@ -71,6 +72,41 @@ export const postOrder = async (req, res, next) => {
     await insertOrderItems(orderId, items);
 
     res.status(200).json({ message: 'Order created', orderId: orderId });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+// Only status can be modified for now, todo: maybe others?
+export const putOrder = async (req, res, next) => {
+  try {
+    // Auth
+    if (!req.user) {
+      const err = new Error('Not logged in');
+      err.status(401);
+      return next(err);
+    }
+    if (req.user.role !== 'admin') {
+      const err = new Error('User not admin');
+      err.status(403);
+      return next(err);
+    }
+
+    // order?
+    const orderId = req.params.id;
+    if (!orderId) return next(new Error('Missing info'));
+
+    // data object for db
+    const { status } = req.body;
+    const data = {};
+    if (status) data.status = status;
+
+    // db
+    const result = await updateOrder(orderId, data);
+    if (!result) return next(new Error('Database error'));
+
+    res.status(200).json({ ok: true, message: 'Updated order status' });
   } catch (error) {
     console.error(error);
     return next(error);

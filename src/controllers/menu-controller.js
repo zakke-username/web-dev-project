@@ -42,6 +42,8 @@ export const addItem = async (req, res, next) => {
       description = null,
     } = req.body;
 
+    console.log(name, category, price);
+
     // check for missing or invalid values
     if (!name || !category || price == null)
       return res.status(400).json({ message: 'Missing required information' });

@@ -45,3 +45,14 @@ export const insertOrderItems = async (orderId, items) => {
   );
   await Promise.all(promises);
 };
+
+export const updateOrder = async (orderId, order) => {
+  const { status } = order;
+  const [res] = await pool.execute(
+    'UPDATE orders SET status = ? WHERE order_id = ?',
+    [status, orderId]
+  );
+
+  if (res.affectedRows === 0) return false;
+  return true;
+};
