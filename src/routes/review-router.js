@@ -2,6 +2,7 @@ import express from 'express';
 import { body } from 'express-validator';
 import { validationErrors } from '../middlewares/validation.js';
 import { authenticateToken } from '../middlewares/auth.js';
+import { upload, createImage, createThumbnail } from '../middlewares/images.js';
 import {
   getAllReviews,
   getReviewById,
@@ -18,10 +19,13 @@ reviewRouter
   .route('/')
   .get(getAllReviews)
   .post(
+    authenticateToken,
+    upload.single('review-image'),
+    createImage,
+    createThumbnail,
     body('title').trim().isLength({ min: 2, max: 255 }),
     body('text').optional({ checkFalsy: true }).trim().isLength({ max: 10000 }),
     validationErrors,
-    authenticateToken,
     postReview
   );
 reviewRouter
