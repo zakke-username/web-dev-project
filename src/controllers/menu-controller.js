@@ -3,7 +3,15 @@ import * as Menu from '../models/menu-model.js';
 export const getMenu = async (req, res, next) => {
   try {
     const menu = await Menu.getMenu();
-    return res.status(200).json(menu);
+
+    const boolDiets = menu.map((item) => {
+      item.vegan = item.vegan === 1 ? true : false;
+      item.gluten_free = item.gluten_free === 1 ? true : false;
+      item.lactose_free = item.lactose_free === 1 ? true : false;
+      return item;
+    });
+
+    return res.status(200).json(boolDiets);
   } catch (error) {
     console.error(error);
     return next(error);
@@ -13,6 +21,11 @@ export const getMenu = async (req, res, next) => {
 export const getItemById = async (req, res, next) => {
   try {
     const item = await Menu.getItemById(req.params.id);
+
+    item.vegan = item.vegan === 1 ? true : false;
+    item.gluten_free = item.gluten_free === 1 ? true : false;
+    item.lactose_free = item.lactose_free === 1 ? true : false;
+
     if (!item) {
       const error = new Error('Menu item not found');
       error.status = 404;
@@ -41,8 +54,6 @@ export const addItem = async (req, res, next) => {
       price,
       description = null,
     } = req.body;
-
-    console.log(name, category, price);
 
     // check for missing or invalid values
     if (!name || !category || price == null)
@@ -91,6 +102,38 @@ export const deleteItem = async (req, res, next) => {
       return next(error);
     }
     return res.status(200).json({ message: 'Deleted item from menu' });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+export const putItem = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      const err = new Error('Not logged in');
+      err.status(401);
+      return next(err);
+    }
+    if (req.user.role !== 'admin') {
+      const err = new Error('User not an admin');
+      err.status(403);
+      return next(err);
+    }
+
+    const { id } = req.params;
+    const { name, description, category, price } = req.body;
+
+    const item = {};
+    if (name) item.name = name;
+    if (description) item.description = description;
+    if (category) item.category = category;
+    if (price) item.price = price;
+
+    const result = await Menu.updateItem(id, item);
+    if (!result) return next(new Error('Database error'));
+
+    return res.status(200).json({ ok: true, message: 'Updated menu item' });
   } catch (error) {
     console.error(error);
     return next(error);

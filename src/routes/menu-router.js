@@ -6,6 +6,7 @@ import {
   getItemById,
   addItem,
   deleteItem,
+  putItem,
 } from '../controllers/menu-controller.js';
 
 const menuRouter = express.Router();
@@ -21,6 +22,10 @@ menuRouter
     createThumbnail,
     addItem
   );
-menuRouter.route('/:id').get(getItemById).delete(authenticateToken, deleteItem);
+menuRouter
+  .route('/:id')
+  .get(getItemById)
+  .put(authenticateToken, putItem)
+  .delete(authenticateToken, deleteItem);
 
 export default menuRouter;

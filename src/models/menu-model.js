@@ -50,3 +50,13 @@ export const deleteItem = async (id) => {
   if (rows.affectedRows === 0) return false;
   return true;
 };
+
+export const updateItem = async (id, item) => {
+  const query = pool.format('UPDATE menu SET ? WHERE menu_item_id = ?', [
+    item,
+    id,
+  ]);
+  const [result] = await pool.execute(query);
+  if (!result.affectedRows) return false;
+  return true;
+};
