@@ -29,6 +29,7 @@ export const postUser = async (user) => {
 
 export const updateUser = async (id, user) => {
   const query = pool.format('UPDATE users SET ? WHERE user_id = ?', [user, id]);
+  console.log(query);
   const [result] = await pool.execute(query);
   if (!result.affectedRows) return false;
   return true;

@@ -53,7 +53,6 @@ userRouter
    * @apiHeader Authorization Bearer token
    * @apiGroup User
    * @apiParam id
-   * @apiBody {Object} user Object containing info to be updated
    */
   .put(authenticateToken, validationErrors, putUser)
 

@@ -88,6 +88,12 @@ export const putUser = async (req, res, next) => {
     if (address) newUser.address = address;
     if (phone) newUser.phone = phone;
 
+    if (!Object.keys(newUser).length) {
+      const err = new Error('Missing info');
+      err.status = 400;
+      return next(err);
+    }
+
     const result = await User.updateUser(id, newUser);
     if (!result) return next(new Error('Database error'));
 
