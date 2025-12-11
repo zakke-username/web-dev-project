@@ -63,6 +63,41 @@ export const postUser = async (req, res, next) => {
   }
 };
 
+export const putUser = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    // auth
+    if (!req.user) {
+      const err = new Error();
+      err.status = 401;
+      return next(err);
+    }
+    if (req.user.id !== id && req.user.role !== 'admin') {
+      const err = new Error();
+      err.status = 403;
+      return next(err);
+    }
+
+    const { first_name, last_name, username, address, phone } = req.body;
+
+    const newUser = {};
+    if (first_name) newUser.first_name = first_name;
+    if (last_name) newUser.last_name = last_name;
+    if (username) newUser.username = username;
+    if (address) newUser.address = address;
+    if (phone) newUser.phone = phone;
+
+    const result = await User.updateUser(id, newUser);
+    if (!result) return next(new Error('Database error'));
+
+    return res.status(200).json({ ok: true, message: 'Updated user info' });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
 export const deleteUser = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);

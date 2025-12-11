@@ -8,6 +8,7 @@ import { validationErrors } from '../middlewares/validation.js';
 import {
   getUserById,
   postUser,
+  putUser,
   deleteUser,
 } from '../controllers/user-controller.js';
 
@@ -44,6 +45,15 @@ userRouter
 userRouter
   .route('/:id')
   .get(authenticateTokenOptional, getUserById)
+
+  /**
+   * @api {put} /user/:id Update user info
+   * @apiName UpdateUser
+   * @apiGroup User
+   * @apiParam id
+   * @apiBody user Object containing info to be updated
+   */
+  .put(authenticateToken, body('user').exists(), validationErrors, putUser)
 
   /**
    * @api {delete} /user/:id Delete user by ID

@@ -27,6 +27,13 @@ export const postUser = async (user) => {
   return { id: result.insertId };
 };
 
+export const updateUser = async (id, user) => {
+  const query = pool.format('UPDATE users SET ? WHERE user_id = ?', [user, id]);
+  const [result] = await pool.execute(query);
+  if (!result.affectedRows) return false;
+  return true;
+};
+
 export const deleteUser = async (id) => {
   const [result] = await pool.execute('DELETE FROM users WHERE user_id = ?', [
     id,

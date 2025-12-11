@@ -112,12 +112,12 @@ export const putItem = async (req, res, next) => {
   try {
     if (!req.user) {
       const err = new Error('Not logged in');
-      err.status(401);
+      err.status = 401;
       return next(err);
     }
     if (req.user.role !== 'admin') {
       const err = new Error('User not an admin');
-      err.status(403);
+      err.status = 403;
       return next(err);
     }
 
