@@ -55,7 +55,7 @@ userRouter
    * @apiParam id
    * @apiBody {Object} user Object containing info to be updated
    */
-  .put(authenticateToken, body('user').exists(), validationErrors, putUser)
+  .put(authenticateToken, validationErrors, putUser)
 
   /**
    * @api {delete} /user/:id Delete user by ID
