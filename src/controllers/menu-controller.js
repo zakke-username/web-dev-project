@@ -39,6 +39,7 @@ export const getItemById = async (req, res, next) => {
 };
 
 export const addItem = async (req, res, next) => {
+  console.log(req.body);
   try {
     // auth
     if (!req.user) return res.sendStatus(401);

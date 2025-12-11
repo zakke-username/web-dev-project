@@ -38,6 +38,9 @@ menuRouter
    */
   .post(
     authenticateToken,
+    upload.single('menu-item-image'),
+    createImage,
+    createThumbnail,
     body('name').trim().isLength({ min: 3, max: 32 }),
     body('description')
       .optional({ checkFalsy: true })
@@ -46,9 +49,6 @@ menuRouter
     body('category').trim().isIn(['main', 'side', 'drink']),
     body('price').isNumeric(),
     validationErrors,
-    upload.single('menu-item-image'),
-    createImage,
-    createThumbnail,
     addItem
   );
 
