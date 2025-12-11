@@ -56,7 +56,7 @@ export const postUser = async (req, res, next) => {
     }
     res
       .status(201)
-      .json({ message: 'Successfully created user', id: result.id });
+      .json({ ok: true, message: 'Successfully created user', id: result.id });
   } catch (error) {
     console.error(error);
     next(error);
