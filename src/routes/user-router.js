@@ -37,6 +37,7 @@ userRouter
  * @apiName GetUser
  * @apiGroup User
  * @apiParam id
+ * @apiHeader Authorization Bearer token (optional)
  * @apiSuccess {Object} user
  * @apiSuccess {String} user.username
  * @apiSuccess {String} user.profile_pic_filename
@@ -49,9 +50,10 @@ userRouter
   /**
    * @api {put} /user/:id Update user info
    * @apiName UpdateUser
+   * @apiHeader Authorization Bearer token
    * @apiGroup User
    * @apiParam id
-   * @apiBody user Object containing info to be updated
+   * @apiBody {Object} user Object containing info to be updated
    */
   .put(authenticateToken, body('user').exists(), validationErrors, putUser)
 
