@@ -38,7 +38,7 @@ menuRouter
    */
   .post(
     authenticateToken,
-    body('name').trim().isLength({ min: 3, max: 32 }).isAlphanumeric(),
+    body('name').trim().isLength({ min: 3, max: 32 }),
     body('description')
       .optional({ checkFalsy: true })
       .trim()

@@ -70,7 +70,7 @@ export const postReview = async (req, res, next) => {
       title,
       rating,
       text,
-      picture_filename: req.file.filename || null,
+      picture_filename: req.file?.filename || null,
     });
 
     if (!result) return next(new Error('Error: could not post review'));

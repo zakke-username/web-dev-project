@@ -76,7 +76,7 @@ export const addItem = async (req, res, next) => {
       category,
       price,
       description,
-      picture_filename: req.file.filename || null,
+      picture_filename: req.file?.filename || null,
     });
     if (!result) return next(new Error('Database error, failed to add item'));
 
