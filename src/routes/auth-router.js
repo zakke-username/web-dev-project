@@ -4,7 +4,13 @@ import { login } from '../controllers/auth-controller.js';
 
 const authRouter = express.Router();
 
-// TODO: validation
+/**
+ * @api {post} /auth/login Log in user
+ * @apiName Login
+ * @apiGroup Auth
+ * @apiBody {String} username
+ * @apiBody {String} password
+ */
 authRouter.route('/login').post(login);
 
 export default authRouter;
