@@ -5,13 +5,13 @@ import userRouter from './user-router.js';
 import authRouter from './auth-router.js';
 import orderRouter from './order-router.js';
 
-const router = express.Router();
+const apiRouter = express.Router();
 
-router.use('/menu', menuRouter);
-router.use('/review', reviewRouter);
-router.use('/user', userRouter);
-router.use('/auth', authRouter);
-router.use('/order', orderRouter);
-router.use('/images', express.static('uploads'));
+apiRouter.use('/menu', menuRouter);
+apiRouter.use('/review', reviewRouter);
+apiRouter.use('/user', userRouter);
+apiRouter.use('/auth', authRouter);
+apiRouter.use('/order', orderRouter);
+apiRouter.use('/images', express.static('uploads'));
 
-export default router;
+export default apiRouter;
