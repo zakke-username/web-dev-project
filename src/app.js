@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', apiRouter);
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
