@@ -72,6 +72,6 @@ orderRouter
    * @apiParam {Number} id Order ID
    * @apiBody {Object} order
    */
-  .put(authenticateToken, body('order').exists(), validationErrors, putOrder);
+  .put(authenticateToken, body('status').exists(), validationErrors, putOrder);
 
 export default orderRouter;
