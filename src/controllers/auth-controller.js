@@ -4,7 +4,6 @@ import { getUserByUsername } from '../models/user-model.js';
 
 export const login = async (req, res, next) => {
   try {
-    console.log(req.body);
     const user = await getUserByUsername(req.body.username);
     if (!user) return res.sendStatus(401);
 

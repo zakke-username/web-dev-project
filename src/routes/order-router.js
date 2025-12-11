@@ -1,4 +1,6 @@
 import express from 'express';
+import { body } from 'express-validator';
+import { validationErrors } from '../middlewares/validation.js';
 import {
   getAllOrders,
   getOrderById,
@@ -29,7 +31,21 @@ orderRouter
    * @apiBody {String} delivery_instruction
    * @apiBody {Object[]} items
    */
-  .post(authenticateToken, postOrder);
+  .post(
+    authenticateToken,
+    body('user_id').exists(),
+    body('items').exists(),
+    body('food_modification')
+      .optional({ checkFalsy: true })
+      .trim()
+      .isLength({ max: 10000 }),
+    body('delivery_instruction')
+      .optional({ checkFalsy: true })
+      .trim()
+      .isLength({ max: 10000 }),
+    validationErrors,
+    postOrder
+  );
 
 /**
  * @api {get} /order/:id Get order by ID
@@ -54,7 +70,8 @@ orderRouter
    * @apiGroup Order
    * @apiHeader {String} Authorization Bearer token
    * @apiParam {Number} id Order ID
+   * @apiBody {Object} order
    */
-  .put(authenticateToken, putOrder);
+  .put(authenticateToken, body('order').exists(), validationErrors, putOrder);
 
 export default orderRouter;

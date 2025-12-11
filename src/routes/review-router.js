@@ -65,6 +65,7 @@ reviewRouter
    */
   .post(
     body('text').trim().isLength({ max: 10000 }),
+    validationErrors,
     authenticateToken,
     postReply
   );

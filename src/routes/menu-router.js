@@ -1,4 +1,6 @@
 import express from 'express';
+import { body } from 'express-validator';
+import { validationErrors } from '../middlewares/validation.js';
 import { authenticateToken } from '../middlewares/auth.js';
 import { upload, createImage, createThumbnail } from '../middlewares/images.js';
 import {
@@ -36,6 +38,14 @@ menuRouter
    */
   .post(
     authenticateToken,
+    body('name').trim().isLength({ min: 3, max: 32 }).isAlphanumeric(),
+    body('description')
+      .optional({ checkFalsy: true })
+      .trim()
+      .isLength({ max: 10000 }),
+    body('category').trim().isIn(['main', 'side', 'drink']),
+    body('price').isNumeric(),
+    validationErrors,
     upload.single('menu-item-image'),
     createImage,
     createThumbnail,

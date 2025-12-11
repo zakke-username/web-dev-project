@@ -34,8 +34,8 @@
     "nodemon": "^3.1.10"
   },
   "apidoc": {
-    "title": "Burger Restaurant",
-    "description": "Burger Restaurant: Web dev project's backend.",
-    "url": "http://burger-restaurant.swedencentral.cloudapp.azure.com/api"
+    "title": "Burger Restaurant API",
+    "description": "Burger Restaurant's API: web dev project backend",
+    "url": "burger-restaurant.swedencentral.cloudapp.azure.com/api"
   }
 }

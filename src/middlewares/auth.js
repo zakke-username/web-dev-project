@@ -21,11 +21,7 @@ export const authenticateTokenOptional = (req, res, next) => {
     return next();
   }
   jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-    if (error) {
-      req.user = null;
-    } else {
-      req.user = decoded;
-    }
+    req.user = error ? null : decoded;
     return next();
   });
 };
